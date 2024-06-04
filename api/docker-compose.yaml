@@ -1,0 +1,4 @@
+services:
+  postgres:
+    image: "postgres"
+    # TODO: implement healthcheck and other db settings here
