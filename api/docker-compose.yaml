@@ -1,4 +1,17 @@
 services:
   postgres:
-    image: "postgres"
-    # TODO: implement healthcheck and other db settings here
+    image: 'postgres'
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-q', '-d', 'postgres', '-U', 'postgres']
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    volumes:
+      - ./db/init-schema.sql:/docker-entrypoint-initdb.d/init-db-01.sql
