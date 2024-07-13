@@ -1,7 +1,7 @@
 export type ErrorResponse = {
   ok: boolean;
   status: number;
-  error?: Error;
+  error?: Error | unknown;
   message?: string;
 };
 
@@ -12,7 +12,7 @@ export const respondWithError = ({
   message,
 }: {
   status: number;
-  error?: Error;
+  error?: Error | unknown;
   message?: string;
 }): ErrorResponse => {
   return { ok: false, status, error, message };

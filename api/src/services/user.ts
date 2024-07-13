@@ -47,7 +47,48 @@ export default class UserService {
     }
   }
 
-  static async LoginUser(username: string, password: string) {}
+  static async LoginUser(username: string, password: string) {
+    try {
+      const res = await queryDb(
+        `
+        SELECT pw
+        FROM users
+        WHERE username = $1 
+        `,
+        [username]
+      );
+
+      if (!res[0].pw) {
+        throw respondWithError({
+          status: ErrorCodes.BAD_REQUEST_ERROR,
+          message: 'username not found',
+        });
+      }
+
+      const match = await bcrypt.compare(password, res[0].pw);
+
+      // password does not match
+      if (!match) {
+        throw respondWithError({
+          status: ErrorCodes.UNAUTHORIZED_ERROR,
+          message: 'Password does not match',
+        });
+      }
+
+      // user authenticated, create JWT
+      const bearerToken = createJWT(JWT_SECRET, {
+        username: res[0].username,
+      });
+
+      return respond({ bearerToken });
+    } catch (error) {
+      throw respondWithError({
+        status: ErrorCodes.UNAUTHORIZED_ERROR,
+        message: 'User not found',
+        error,
+      });
+    }
+  }
 
   static async IsUserRegistered(username: string): Promise<boolean> {
     const response = await queryDb(

@@ -31,17 +31,28 @@ export default class UserController {
     }
   }
 
-  // static LoginUser(req: Request, res: Response, next: NextFunction) {
-  //   const { username, password } = req.body;
+  static async LoginUser(req: Request, res: Response, next: NextFunction) {
+    const { username, password } = req.body;
+    console.log(username, password);
+    if (!username || !password) {
+      console.log('hola');
 
-  //   if (!username || !password) {
-  //     return next(
-  //       respondWithError({
-  //         status: ErrorCodes.BAD_REQUEST_ERROR,
-  //         message: 'No username/password',
-  //       })
-  //     );
-  //   }
+      return next(
+        respondWithError({
+          status: ErrorCodes.BAD_REQUEST_ERROR,
+          message: 'No username/password',
+        })
+      );
+    }
+
+    try {
+      const loginResponse = await UserService.LoginUser(username, password);
+
+      res.status(200).json(loginResponse);
+    } catch (error) {
+      return next(error);
+    }
+  }
 
   //   // TODO
   // }
