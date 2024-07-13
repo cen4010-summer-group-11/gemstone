@@ -2,7 +2,7 @@ import 'colors';
 import { JWT_SECRET, SALT_ROUNDS } from '../config';
 import * as bcrypt from 'bcrypt';
 import queryDb from '../db/db';
-import { ErrorCodes, respondWithError } from '../util/error';
+import { ErrorCodes, ErrorResponse, respondWithError } from '../util/error';
 import { respond } from '../util/data';
 import { createJWT } from '../util/jwt';
 
@@ -42,8 +42,7 @@ export default class UserService {
 
       return respond({ bearerToken });
     } catch (error) {
-      console.log('Error caught while inserting user into database'.red);
-      throw { ok: false, error };
+      throw error;
     }
   }
 
@@ -58,10 +57,10 @@ export default class UserService {
         [username]
       );
 
-      if (!res[0].pw) {
+      if (!res.length) {
         throw respondWithError({
           status: ErrorCodes.BAD_REQUEST_ERROR,
-          message: 'username not found',
+          message: 'Username not found',
         });
       }
 
@@ -82,11 +81,7 @@ export default class UserService {
 
       return respond({ bearerToken });
     } catch (error) {
-      throw respondWithError({
-        status: ErrorCodes.UNAUTHORIZED_ERROR,
-        message: 'User not found',
-        error,
-      });
+      throw error;
     }
   }
 

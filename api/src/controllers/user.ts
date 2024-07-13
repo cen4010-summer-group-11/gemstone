@@ -33,10 +33,8 @@ export default class UserController {
 
   static async LoginUser(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
-    console.log(username, password);
-    if (!username || !password) {
-      console.log('hola');
 
+    if (!username || !password) {
       return next(
         respondWithError({
           status: ErrorCodes.BAD_REQUEST_ERROR,
