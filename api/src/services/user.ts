@@ -50,7 +50,7 @@ export default class UserService {
     try {
       const res = await queryDb(
         `
-        SELECT pw
+        SELECT username, pw
         FROM users
         WHERE username = $1 
         `,

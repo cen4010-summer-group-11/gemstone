@@ -5,6 +5,7 @@ import { PORT } from './config';
 import { genericErrorHandler } from './middleware/error/generic-error';
 import authRouter from './routes/auth';
 import './db/db';
+import { isAuthenticated } from './middleware/auth';
 
 const app = express();
 
@@ -15,9 +16,13 @@ app.use(express.json()); // response body to json parsing
 app.use('/auth', authRouter);
 
 // health check
-app.use('/', (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({ ping: 'pong' });
-});
+app.use(
+  '/',
+  isAuthenticated,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({ ping: 'pong' });
+  }
+);
 
 app.use(genericErrorHandler);
 
