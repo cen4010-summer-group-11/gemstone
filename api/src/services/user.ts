@@ -4,7 +4,8 @@ import * as bcrypt from 'bcrypt';
 import queryDb from '../db/db';
 import { ErrorCodes, ErrorResponse, respondWithError } from '../util/error';
 import { respond } from '../util/data';
-import { createJWT } from '../util/jwt';
+import { createJWT, verifyJWT } from '../util/jwt';
+import { JwtPayload } from 'jsonwebtoken';
 
 export default class UserService {
   static async RegisterUser(username: string, password: string) {
@@ -97,5 +98,23 @@ export default class UserService {
 
     if (response.length) return true;
     return false;
+  }
+
+  static async RefreshUserToken(bearerToken: string) {
+    try {
+      const oldToken = verifyJWT(JWT_SECRET, bearerToken) as JwtPayload;
+
+      if (!oldToken?.username) {
+        throw respondWithError({
+          status: ErrorCodes.BAD_REQUEST_ERROR,
+          message: 'No username found in token',
+        });
+      }
+
+      const newToken = createJWT(JWT_SECRET, { username: oldToken.username });
+      return respond({ newToken });
+    } catch (error) {
+      throw error;
+    }
   }
 }

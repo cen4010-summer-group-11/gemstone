@@ -52,21 +52,27 @@ export default class UserController {
     }
   }
 
-  //   // TODO
-  // }
+  static async RefreshUserToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const bearerToken = req.get('Authorization');
 
-  // static VerifyUser(req: Request, res: Response, next: NextFunction) {
-  //   const bearerToken = req.get('Authorization');
+    if (!bearerToken) {
+      return next(
+        respondWithError({
+          status: ErrorCodes.BAD_REQUEST_ERROR,
+          message: 'No bearer token',
+        })
+      );
+    }
 
-  //   if (!bearerToken) {
-  //     return next(
-  //       respondWithError({
-  //         status: ErrorCodes.BAD_REQUEST_ERROR,
-  //         message: 'No bearer token',
-  //       })
-  //     );
-  //   }
-
-  //   // TODO
-  // }
+    try {
+      const newToken = await UserService.RefreshUserToken(bearerToken);
+      res.status(200).json(newToken);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }

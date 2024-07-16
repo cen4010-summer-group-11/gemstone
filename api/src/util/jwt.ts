@@ -1,5 +1,5 @@
 import 'colors';
-import jwt, { VerifyErrors } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import { ErrorCodes, respondWithError } from './error';
 const { sign, verify } = jwt;
 
@@ -16,7 +16,7 @@ export const verifyJWT = (secret: string, bearerToken: string) => {
 
   try {
     const decoded = verify(token, secret);
-
+    
     return decoded;
   } catch (error) {
     throw respondWithError({
