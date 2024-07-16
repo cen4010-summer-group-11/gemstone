@@ -3,7 +3,11 @@ export type ApiResponse = {
   data: any;
 };
 
+type RespondParams = {
+  data: any
+}
+
 // helper function to shape response objects
-export const respond = (data: any): ApiResponse => {
+export const respond = ({ data }: RespondParams): ApiResponse => {
   return { ok: true, data };
 };

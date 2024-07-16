@@ -41,7 +41,7 @@ export default class UserService {
         username: res[0].username,
       });
 
-      return respond({ bearerToken });
+      return respond({ data: bearerToken });
     } catch (error) {
       throw error;
     }
@@ -80,7 +80,7 @@ export default class UserService {
         username: res[0].username,
       });
 
-      return respond({ bearerToken });
+      return respond({ data: bearerToken });
     } catch (error) {
       throw error;
     }
@@ -112,7 +112,7 @@ export default class UserService {
       }
 
       const newToken = createJWT(JWT_SECRET, { username: oldToken.username });
-      return respond({ newToken });
+      return respond({ data: newToken });
     } catch (error) {
       throw error;
     }
