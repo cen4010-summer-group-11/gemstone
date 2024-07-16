@@ -11,6 +11,9 @@ type Invoice = {
 
 // MANUALLY TEST
 export default class InvoiceService {
+  /**
+   * Creates a new invoice and inserts every item
+   */
   static async NewInvoice({ name, fromUser, items }: Invoice) {
     try {
       const invoiceResult = await queryDb(
@@ -28,11 +31,57 @@ export default class InvoiceService {
         });
       }
 
-      items.forEach((item: InvoiceItem) => {
-        ItemService.NewInvoiceItem({ invoiceId: invoiceResult[0].id, ...item });
+      items.forEach(async (item: InvoiceItem) => {
+        // TODO: unsafe, wrap this around transaction
+        await ItemService.NewInvoiceItem({
+          invoiceId: invoiceResult[0].id,
+          ...item,
+        });
       });
 
       return respond({ data: {} });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @returns invoice list created by username
+   */
+  static async GetInvoiceListByUsername(username: string) {
+    try {
+      const invoices = queryDb(
+        `
+          SELECT * FROM invoice
+          WHERE from_user = $1
+        `,
+        [username]
+      );
+
+      return invoices;
+    } catch (error) {
+      throw error;
+    }
+  }
+  /**
+   * Get list of invoice items of a certain invoice (invoiceId)
+   * @returns list of invoice items of invoiceId
+   */
+  static async GetInvoiceDetails(username: string, invoiceId: number) {
+    try {
+      const invoiceDetails = await queryDb(
+        `
+            SELECT i.item_name as item_name,
+                   i.metal_type as metal_type,
+                   ii.price as price,
+                   ii.quantity as quantity
+            FROM invoice_item ii
+            JOIN item i ON i.id = ii.item_id
+            WHERE i.from_user = $1 AND ii.invoice_id = $2`,
+        [username, invoiceId]
+      );
+
+      return respond({ data: invoiceDetails });
     } catch (error) {
       throw error;
     }

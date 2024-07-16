@@ -28,13 +28,14 @@ const queryDb = async (query: string, args?: Array<any>) => {
 
   let res;
   try {
-    res = await client.query(query, args ?? undefined);
+    res = await client.query(query, args ?? undefined); // TODO: just use pool.query
   } catch (error) {
     console.log('Database Query Error:'.red, error);
     // let error be handled to whichever function calls it
     throw error;
+  } finally {
+    client.release();
   }
-  client.release();
 
   return res.rows;
 };

@@ -102,7 +102,9 @@ export default class ItemService {
     }
   }
 
-  // Create Invoice Item
+  /**
+   * Create an invoice item
+   */
   static async NewInvoiceItem({
     id,
     price,
