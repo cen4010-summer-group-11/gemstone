@@ -107,7 +107,7 @@ export default class UserService {
       if (!oldToken?.username) {
         throw respondWithError({
           status: ErrorCodes.BAD_REQUEST_ERROR,
-          message: 'No username found in token',
+          message: 'No username found in token/expired token',
         });
       }
 

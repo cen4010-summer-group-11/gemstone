@@ -5,7 +5,7 @@ import ItemService, { InvoiceItem } from './item';
 
 type Invoice = {
   name: string;
-  fromUser: string;
+  fromUser?: string;
   items: [InvoiceItem];
 };
 
@@ -14,14 +14,14 @@ export default class InvoiceService {
   /**
    * Creates a new invoice and inserts every item
    */
-  static async NewInvoice({ name, fromUser, items }: Invoice) {
+  static async CreateInvoice({ name, items }: Invoice, username: string) {
     try {
       const invoiceResult = await queryDb(
         `
         INSERT INTO invoice (invoice_name, from_user) 
         VALUES ($1, $2) 
         RETURNING id`,
-        [name, fromUser]
+        [name, username]
       );
 
       if (!items.length) {
@@ -48,14 +48,18 @@ export default class InvoiceService {
   /**
    * @returns invoice list created by username
    */
-  static async GetInvoiceListByUsername(username: string) {
+  static async GetInvoiceListByUsername(username: string, page?: number) {
     try {
       const invoices = queryDb(
         `
-          SELECT * FROM invoice
+          SELECT * 
+          FROM invoice
           WHERE from_user = $1
+          ORDER BY created_at DESC
+          LIMIT 25
+          OFFSET $2
         `,
-        [username]
+        [username, page ?? 0]
       );
 
       return invoices;

@@ -5,6 +5,9 @@ import { PORT } from './config';
 import { genericErrorHandler } from './middleware/error/generic-error';
 import authRouter from './routes/auth';
 import './db/db';
+import purchaseRouter from './routes/purchase';
+import itemRouter from './routes/item';
+import invoiceRouter from './routes/invoice';
 
 const app = express();
 
@@ -13,6 +16,9 @@ app.use(express.json()); // response body to json parsing
 
 // routes
 app.use('/auth', authRouter);
+app.use('/purchase', purchaseRouter);
+app.use('/item', itemRouter);
+app.use('/invoice', invoiceRouter);
 
 // health check
 app.use('/', (req: Request, res: Response, next: NextFunction) => {
