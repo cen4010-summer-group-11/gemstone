@@ -1,0 +1,12 @@
+/* src/styles/colors.css */
+/* src/styles/colors.css */
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FF5722; /* Orange */
+    --background-color: #f4f4f4; /* Light grey */
+    --text-color: #333; /* Dark grey */
+    --highlight-color: #e8e8e8; /* Highlight grey */
+    --button-hover-color: #45a049; /* Darker green for button hover */
+    --border-color: #ccc; /* Light grey for borders */
+  }
+  
