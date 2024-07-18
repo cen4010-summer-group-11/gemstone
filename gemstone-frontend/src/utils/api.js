@@ -1,12 +1,20 @@
 // src/utils/api.js
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = 'http://localhost:3000';
 
 export const getItems = async () => {
-  const response = await fetch(`${BASE_URL}/item/`);
+  const response = await fetch(`${BASE_URL}/item/`, {
+    mode: 'cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      // add the bearer token at every request
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVuem8iLCJpYXQiOjE3MjEzMjY4MDEsImV4cCI6MTcyMTQ5OTYwMX0.I43b2p1SI3s58zOGro3t51NtccPA-IVcjWQzd-EDRSE`,
+    },
+  });
+
   if (!response.ok) {
     throw new Error('Failed to fetch items');
   }
-  return response.json();
+  return await response.json(); // response.json() returns a Promise, await
 };
 
 export const getItem = async (id) => {
