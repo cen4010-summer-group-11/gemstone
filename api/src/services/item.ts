@@ -64,11 +64,12 @@ export default class ItemService {
             i.id AS item_id,
             i.item_name,
             COALESCE(SUM(ip.price * ip.quantity) / NULLIF(SUM(ip.quantity), 0), 0) AS wac_price,
-            COALESCE(SUM(ip.quantity), 0) - COALESCE(SUM(ii.quantity), 0) AS net_quantity
+            COALESCE(SUM(ip.quantity), 0) - COALESCE(SUM(ii.quantity), 0) AS net_quantity,
+            i.created_at
         FROM 
             users u
         LEFT JOIN 
-            item i ON i.from_user = u.id
+            item i ON i.from_user = u.username
         LEFT JOIN 
             item_purchase ip ON ip.id = i.id
         LEFT JOIN 
@@ -77,8 +78,6 @@ export default class ItemService {
             u.username = $1
         GROUP BY 
             i.id, i.item_name, u.username;
-        ORDER BY
-            i.created_at DESC
         `,
         [username]
       );
