@@ -14,6 +14,7 @@ type PurchaseItem = {
   id: number;
   price: number;
   quantity: number;
+  supplier: string;
 };
 
 export type InvoiceItem = PurchaseItem;
@@ -43,7 +44,7 @@ export default class ItemService {
       const queryResult = await queryDb(
         `
         SELECT * FROM item
-        WHERE id = $1, username = $2 
+        WHERE id = $1 AND from_user = $2 
         `,
         [id, username]
       );
@@ -60,24 +61,42 @@ export default class ItemService {
     try {
       const queryResult = await queryDb(
         `
+        WITH purchase_totals AS (
+            SELECT 
+                ip.item_id,
+                SUM(ip.price * ip.quantity) AS total_price,
+                SUM(ip.quantity) AS total_purchase_quantity
+            FROM 
+                item_purchase ip
+            GROUP BY 
+                ip.item_id
+        ),
+        invoice_totals AS (
+            SELECT 
+                ii.item_id,
+                SUM(ii.quantity) AS total_invoice_quantity
+            FROM 
+                invoice_item ii
+            GROUP BY 
+                ii.item_id
+        )
         SELECT 
             i.id AS item_id,
             i.item_name,
-            COALESCE(SUM(ip.price * ip.quantity) / NULLIF(SUM(ip.quantity), 0), 0) AS wac_price,
-            COALESCE(SUM(ip.quantity), 0) - COALESCE(SUM(ii.quantity), 0) AS net_quantity,
+            COALESCE(pt.total_price / NULLIF(pt.total_purchase_quantity, 0), 0) AS wac_price,
+            COALESCE(pt.total_purchase_quantity, 0) - COALESCE(it.total_invoice_quantity, 0) AS net_quantity,
             i.created_at
         FROM 
             users u
         LEFT JOIN 
             item i ON i.from_user = u.username
         LEFT JOIN 
-            item_purchase ip ON ip.id = i.id
+            purchase_totals pt ON pt.item_id = i.id
         LEFT JOIN 
-            invoice_item ii ON ii.item_id = i.id
+            invoice_totals it ON it.item_id = i.id
         WHERE 
-            u.username = $1
-        GROUP BY 
-            i.id, i.item_name, u.username;
+            u.username = $1;
+
         `,
         [username]
       );
@@ -88,7 +107,6 @@ export default class ItemService {
     }
   }
 
-  // NOT TESTED MANUALLY
   // Delete an item
   static async DeleteItemById(itemId: number, username: string) {
     try {
@@ -106,15 +124,14 @@ export default class ItemService {
     }
   }
 
-  // NOT TESTED MANUALLY
   // Get Item Purchases of a specific user
   static async GetItemPurchases(username: string) {
     try {
-      const queryResult = queryDb(
+      const queryResult = await queryDb(
         `
-        SELECT pi.id, pi.price, pi.purchase_date, pi.supplier, pi.quantity
-        FROM purchase_item pi
-        JOIN item i on i.id = pi.id
+        SELECT pi.id, pi.price, pi.created_at, pi.supplier, pi.quantity
+        FROM item_purchase pi
+        LEFT JOIN item i on i.id = pi.item_id
         WHERE i.from_user = $1
         ORDER BY pi.created_at DESC
         `,
@@ -127,15 +144,14 @@ export default class ItemService {
     }
   }
 
-  // NOT MANUALLY TESTED
   // Get item purchase by id and user
   static async GetItemPurchaseById(id: number, username: string) {
     try {
-      const queryResult = queryDb(
+      const queryResult = await queryDb(
         `
-        SELECT pi.id, pi.price, pi.purchase_date, pi.supplier, pi.quantity
-        FROM purchase_item pi
-        JOIN item i on i.id = pi.id
+        SELECT pi.id, i.id AS item_id, i.item_name, pi.price, pi.created_at, pi.supplier, pi.quantity
+        FROM item_purchase pi
+        JOIN item i on i.id = pi.item_id
         WHERE i.from_user = $1 AND pi.id = $2
         `,
         [username, id]
@@ -152,11 +168,11 @@ export default class ItemService {
     username: string,
     purchaseItem: PurchaseItem
   ) {
-    const { id, price, quantity } = purchaseItem;
-    const requiredFields = ['id', 'price', 'quantity'];
+    const { id, supplier, price, quantity } = purchaseItem;
+    const requiredFields = ['id', 'price', 'supplier', 'quantity'];
 
     if (!hasAllKeys(requiredFields, purchaseItem)) {
-      return respondWithError({
+      throw respondWithError({
         status: ErrorCodes.BAD_REQUEST_ERROR,
         message: 'Missing fields in response body object',
       });
@@ -182,10 +198,10 @@ export default class ItemService {
 
       const queryResult = await queryDb(
         `
-        INSERT INTO item_purchase (id, price, quantity)
-        VALUES ($1, $2, $3)
+        INSERT INTO item_purchase (item_id, supplier, price, quantity)
+        VALUES ($1, $2, $3, $4)
         `,
-        [id, price, quantity]
+        [id, supplier, price, quantity]
       );
 
       return respond({ data: queryResult });

@@ -9,8 +9,8 @@ router.use(isAuthenticated);
 
 router.get("/", ItemController.GetItemList);
 router.post("/", ItemController.CreateItem);
-router.get("/:itemId", ItemController.GetItem);
-router.delete("/:itemId", ItemController.DeleteItem);
+router.get("/:id", ItemController.GetItem);
+router.delete("/:id", ItemController.DeleteItem);
 
 const itemRouter = router;
 export default itemRouter;

@@ -9,7 +9,7 @@ export default class ItemController {
   static async GetItem(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const { username } = res.locals;
-
+    
     const idNumber = parseInt(id as string);
 
     if (Number.isNaN(idNumber)) {

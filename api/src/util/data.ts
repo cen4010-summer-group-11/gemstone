@@ -13,5 +13,6 @@ export const respond = ({ data }: RespondParams): ApiResponse => {
 };
 
 export const hasAllKeys = (arr: Array<any>, obj: object) => {
-  return arr.every((field) => obj.hasOwnProperty(field));
+  return arr.every((field) => {
+    return obj.hasOwnProperty(field)});
 };

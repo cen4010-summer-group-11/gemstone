@@ -14,6 +14,16 @@ export default class PurchaseController {
    */
   static async CreatePurchase(req: Request, res: Response, next: NextFunction) {
     const { username } = res.locals;
+
+    if (!req.body.purchase) {
+      return next(
+        respondWithError({
+          status: ErrorCodes.BAD_REQUEST_ERROR,
+          message: 'no purchase item found',
+        })
+      );
+    }
+
     const { purchase } = req.body;
 
     try {
@@ -45,7 +55,7 @@ export default class PurchaseController {
 
   /**
    * Gets single purchase made by user
-   * 
+   *
    * It returns an empty value if the user is not an owner of that id
    */
   static async GetPurchase(req: Request, res: Response, next: NextFunction) {

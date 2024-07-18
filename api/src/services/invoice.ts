@@ -50,7 +50,7 @@ export default class InvoiceService {
    */
   static async GetInvoiceListByUsername(username: string, page?: number) {
     try {
-      const invoices = queryDb(
+      const invoices = await queryDb(
         `
           SELECT * 
           FROM invoice
@@ -73,6 +73,16 @@ export default class InvoiceService {
    */
   static async GetInvoiceDetails(username: string, invoiceId: number) {
     try {
+      const invoice = await queryDb(
+        `
+          SELECT * 
+          FROM invoice
+          WHERE from_user = $1 AND id = $2
+          ORDER BY created_at DESC
+        `,
+        [username, invoiceId]
+      );
+
       const invoiceDetails = await queryDb(
         `
             SELECT i.item_name as item_name,
@@ -84,8 +94,8 @@ export default class InvoiceService {
             WHERE i.from_user = $1 AND ii.invoice_id = $2`,
         [username, invoiceId]
       );
-
-      return respond({ data: invoiceDetails });
+      const fullInvoice = {...invoice, items: invoiceDetails}
+      return respond({ data: fullInvoice });
     } catch (error) {
       throw error;
     }

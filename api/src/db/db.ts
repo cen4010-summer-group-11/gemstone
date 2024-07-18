@@ -1,6 +1,7 @@
 import 'colors';
 import { Pool } from 'pg';
 import { DB_URL } from '../config';
+import { ErrorCodes, respondWithError } from '../util/error';
 
 // create pool of database connections
 const pool = new Pool({
@@ -32,7 +33,10 @@ const queryDb = async (query: string, args?: Array<any>) => {
   } catch (error) {
     console.log('Database Query Error:'.red, error);
     // let error be handled to whichever function calls it
-    throw error;
+    throw respondWithError({
+      status: ErrorCodes.INTERNAL_ERROR,
+      error: error as any,
+    });
   } finally {
     client.release();
   }

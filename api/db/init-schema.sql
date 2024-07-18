@@ -16,7 +16,8 @@ CREATE TABLE item (
 
 -- Weak Entity
 CREATE TABLE item_purchase (
-    id INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    item_id INTEGER REFERENCES item(id) ON DELETE CASCADE,
     price NUMERIC NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     supplier VARCHAR NOT NULL,

@@ -29,6 +29,7 @@ export default class InvoiceController {
     try {
       // TODO: create pagination
       const result = await InvoiceService.GetInvoiceListByUsername(username, 0);
+      res.status(200).json(result);
     } catch (error) {
       return next(error);
     }
@@ -54,6 +55,8 @@ export default class InvoiceController {
 
     try {
       const result = await InvoiceService.GetInvoiceDetails(username, idNumber);
+
+      res.status(200).json(result);
     } catch (error) {
       return next(error);
     }

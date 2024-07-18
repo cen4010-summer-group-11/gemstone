@@ -7,5 +7,6 @@ export const genericErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(error.status).json(error);
+  console.log(error);
+  res.status(error.status || 500).json(error);
 };
