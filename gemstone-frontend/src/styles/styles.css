@@ -1,0 +1,327 @@
+/* src/styles/styles.css */
+@import './colors.css';
+
+/* Common styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.page {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: var(--background-color);
+  padding: 15px;
+  height: 100vh;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.sidebar a:hover {
+  color: var(--primary-color);
+}
+
+.page-content {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+}
+
+/* Dashboard styles */
+.dashboard-page .highlight-boxes {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.dashboard-page .highlight-box {
+  background-color: var(--highlight-color);
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.dashboard-page .highlight-box.total-value {
+  background-color: #e8f5e9; /* Light green */
+}
+
+.dashboard-page .highlight-box.pending-orders {
+  background-color: #fff3e0; /* Light orange */
+}
+
+.dashboard-page .highlight-box.low-stock {
+  background-color: #fce4ec; /* Light pink */
+}
+
+.dashboard-page .highlight-box:last-child {
+  margin-right: 0;
+}
+
+.dashboard-page .activity-sections {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dashboard-page .recent-activity,
+.dashboard-page .notifications {
+  background-color: var(--highlight-color);
+  padding: 20px;
+  flex: 1;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.dashboard-page .recent-activity h2,
+.dashboard-page .notifications h2 {
+  margin-bottom: 10px;
+}
+
+.dashboard-page .recent-activity p,
+.dashboard-page .notifications p {
+  margin: 5px 0;
+}
+
+.dashboard-page .recent-activity:last-child,
+.dashboard-page .notifications:last-child {
+  margin-right: 0;
+}
+
+/* Inventory styles */
+.inventory-page .inventory-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.inventory-page .search-bar {
+  padding: 10px;
+  width: calc(100% - 120px); /* Adjust width to make space for button */
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.inventory-page .add-item-button {
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.inventory-page .add-item-button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.inventory-page .inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory-page .inventory-table th,
+.inventory-page .inventory-table td {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  text-align: left;
+}
+
+.inventory-page .inventory-table th {
+  background-color: var(--highlight-color);
+}
+/* Price Management styles */
+.price-management-page .current-metal-prices,
+.price-management-page .profit-margin-calculator,
+.price-management-page .price-list {
+  margin-bottom: 20px;
+}
+
+.price-management-page h2 {
+  margin-bottom: 10px;
+}
+
+.price-management-page .current-metal-prices div,
+.price-management-page .profit-margin-calculator input,
+.price-management-page .price-list table {
+  margin-bottom: 10px;
+}
+
+.price-management-page .current-metal-prices {
+  background-color: var(--highlight-color);
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.price-management-page .current-metal-prices button {
+  margin-top: 10px;
+}
+
+.price-management-page .update-prices-button {
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.price-management-page .update-prices-button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.price-management-page .profit-margin-calculator {
+  background-color: var(--highlight-color);
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.price-management-page .input-field {
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.price-management-page .calculate-button {
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.price-management-page .calculate-button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.price-management-page .price-list {
+  background-color: var(--highlight-color);
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.price-management-page .price-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.price-management-page .price-list-table th,
+.price-management-page .price-list-table td {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  text-align: left;
+}
+
+.price-management-page .price-list-table th {
+  background-color: var(--highlight-color);
+}
+.reports-page .generate-report,
+.reports-page .date-range,
+.reports-page .report-preview {
+  margin-bottom: 20px;
+}
+
+.reports-page h2 {
+  margin-bottom: 10px;
+}
+
+.reports-page .report-button,
+.reports-page .apply-button,
+.reports-page .export-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.reports-page .report-button:hover,
+.reports-page .apply-button:hover,
+.reports-page .export-button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.reports-page .date-range .date-input {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.reports-page .chart-placeholder {
+  width: 100%;
+  height: 300px;
+  background-color: var(--highlight-color);
+  border-radius: 4px;
+}
+/* Invoices styles */
+.invoices-page .invoices-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .invoices-page .search-bar {
+    padding: 10px;
+    width: calc(100% - 160px); /* Adjust width to make space for button */
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+  }
+  
+  .invoices-page .create-invoice-button {
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .invoices-page .create-invoice-button:hover {
+    background-color: var(--button-hover-color);
+  }
+  
+  .invoices-page .invoices-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .invoices-page .invoices-table th,
+  .invoices-page .invoices-table td {
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .invoices-page .invoices-table th {
+    background-color: var(--highlight-color);
+  }
+  
+  .invoices-page .pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
