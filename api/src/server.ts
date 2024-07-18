@@ -8,9 +8,11 @@ import './db/db';
 import purchaseRouter from './routes/purchase';
 import itemRouter from './routes/item';
 import invoiceRouter from './routes/invoice';
+import cors from 'cors';
 
 const app = express();
 
+app.use(cors());
 app.use(morgan('tiny')); // logging
 app.use(express.json()); // response body to json parsing
 
