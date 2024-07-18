@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ErrorCodes, respondWithError } from '../util/error';
 import { verifyJWT } from '../util/jwt';
 import { JWT_SECRET } from '../config';
+import { JwtPayload } from 'jsonwebtoken';
 
 /**
  * Middleware to check request is authenticated, can be prepended to any route
@@ -28,6 +29,7 @@ export const isAuthenticated = async (
 
     if (payload) {
       res.locals.user = payload;
+      res.locals.username = (payload as JwtPayload).username;
     }
 
     next();

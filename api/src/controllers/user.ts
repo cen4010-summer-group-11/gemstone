@@ -25,7 +25,7 @@ export default class UserController {
         password
       );
 
-      res.status(200).json(registerResponse);
+      res.status(201).json(registerResponse);
     } catch (error) {
       return next(error);
     }
