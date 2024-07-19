@@ -1,13 +1,13 @@
 // src/utils/api.js
 const BASE_URL = 'http://localhost:3000';
 
-export const getItems = async () => {
+export const getItems = async (bearerToken) => {
   const response = await fetch(`${BASE_URL}/item/`, {
     mode: 'cors',
     headers: {
       'Access-Control-Allow-Origin': '*',
       // add the bearer token at every request
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVuem8iLCJpYXQiOjE3MjEzMjY4MDEsImV4cCI6MTcyMTQ5OTYwMX0.I43b2p1SI3s58zOGro3t51NtccPA-IVcjWQzd-EDRSE`,
+      Authorization: bearerToken,
     },
   });
 
@@ -91,4 +91,52 @@ export const createPurchase = async (purchase) => {
     throw new Error('Failed to create purchase');
   }
   return response.json();
+};
+
+export const registerUser = async (username, password) => {
+  const response = await fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) {
+    console.error(response);
+  }
+  return await response.json();
+};
+
+export const loginUser = async (username, password) => {
+  const response = await fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) {
+    console.error(response);
+  }
+  return await response.json();
+};
+
+export const authUser = async (bearerToken) => {
+  const response = await fetch(`${BASE_URL}/auth/me`, {
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': bearerToken,
+    },
+  });
+  const json = await response.json();
+  if (!json.ok) {
+    console.error(json);
+  }
+  return json
 };

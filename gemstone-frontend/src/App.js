@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -8,6 +8,7 @@ import Invoices from './pages/Invoices';
 import Reports from './pages/Reports';
 
 const App = () => {
+
   return (
     <Router>
       <Routes>

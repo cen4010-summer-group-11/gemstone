@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authUser, registerUser } from '../utils/api';
+import { clearBearerToken, getBearerToken, storeBearerToken } from '../utils/token';
 // Make sure to create this CSS file
 
 const LoginPage = () => {
@@ -7,9 +9,38 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  // check at startup if token works
+  useEffect(() => {
+    const tryAuthenticateUser = async () => {
+      const response = await authUser(getBearerToken());
+  
+      if (!response.ok) {
+        // clearBearerToken();
+        console.error(response)
+        return
+      }
+      console.log(response);
+      navigate('/dashboard');
+    }
+
+    if(getBearerToken()) {
+      tryAuthenticateUser();
+    }
+  }, [])
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     // Add your login logic here
+    
+    const response = await registerUser(username, password);
+
+    if (!response.ok) {
+      console.error("response is not ok");
+      return
+    }
+
+    storeBearerToken(response?.data);
+
     navigate('/dashboard'); // Redirect to dashboard after login
   };
 
