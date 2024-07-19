@@ -47,7 +47,7 @@ const LoginPage = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <div className="logo-placeholder">LOGO</div>
+        <div className="logo-placeholder">GEMSTONE</div>
         <h2>Welcome Back</h2>
         <form onSubmit={handleLogin}>
           <div className="input-group">

@@ -49,13 +49,20 @@ export const deleteItem = async (id) => {
   return response.json();
 };
 
-export const getInvoices = async () => {
-  const response = await fetch(`${BASE_URL}/invoice/`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch invoices');
-  }
-  return response.json();
-};
+export const getInvoices = async (bearerToken) => {
+    const response = await fetch(`${BASE_URL}/invoice/`, {
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to fetch invoices');
+    }
+    return await response.json(); // response.json() returns a Promise, await
+  };
 
 export const createInvoice = async (invoice) => {
   const response = await fetch(`${BASE_URL}/invoice/`, {
@@ -71,28 +78,21 @@ export const createInvoice = async (invoice) => {
   return response.json();
 };
 
-export const getPurchases = async () => {
-  const response = await fetch(`${BASE_URL}/purchase/`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch purchases');
+export const getPurchases = async (bearerToken) => {
+    const response = await fetch(`${BASE_URL}/purchase/`, {
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: bearerToken,
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to fetch purchases');
+    }
+    return await response.json(); // response.json() returns a Promise, await
   }
-  return response.json();
-};
-
-export const createPurchase = async (purchase) => {
-  const response = await fetch(`${BASE_URL}/purchase/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ purchase }),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to create purchase');
-  }
-  return response.json();
-};
-
+  
 export const registerUser = async (username, password) => {
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
